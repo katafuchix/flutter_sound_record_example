@@ -40,7 +40,7 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
-      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [  # コンパイラのビルド設定を定義
           '$(inherited)',
           'PERMISSION_CAMERA=1',
           'PERMISSION_MICROPHONE=1',
@@ -51,4 +51,12 @@ post_install do |installer|
 end
 ```
 
+$(inherited)は、既存の設定をそのまま継承するために使用されます。このようにすることで、Flutterや他のライブラリが設定したデフォルトの定義が保持されます。
+
+'PERMISSION_CAMERA=1', 'PERMISSION_MICROPHONE=1', 'PERMISSION_SPEECH_RECOGNIZER=1'
+これらは、それぞれの権限（カメラ、マイク、音声認識）の使用を有効化するためのプリプロセッサ定義です。permission_handlerパッケージを使用する際、これらの権限に対応するマクロを定義することで、各権限のリクエストが正常に動作するようになります。
+
+具体的には、これらのマクロを定義することで、CocoaPodsを使用して依存関係をインストールした際に、アプリがこれらの機能を使用することを許可するための設定が有効化されます。これにより、マイクの利用許可ウィンドウが正しく表示されるようになったと考えられます。
+
+このコードは、iOSアプリのビルド時にカメラ、マイク、音声認識の許可リクエストを適切に行うための設定を追加しています。特に、permission_handlerパッケージを使用する場合に、権限リクエストを適切に処理するために必要なプリプロセッサマクロを定義しています。
 
