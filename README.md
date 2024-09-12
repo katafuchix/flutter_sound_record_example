@@ -28,3 +28,27 @@ post_install do |installer|
   end
 end
 ```
+
+```
+pb_release is defined in the pb_decode.h included at the top of GDTCCTUploadOperation.m
+```
+
+こんなエラーが出てダメな場合は
+
+```
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+    target.build_configurations.each do |config|
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+          '$(inherited)',
+          'PERMISSION_CAMERA=1',
+          'PERMISSION_MICROPHONE=1',
+          'PERMISSION_SPEECH_RECOGNIZER=1',
+       ]
+    end
+  end
+end
+```
+
+
